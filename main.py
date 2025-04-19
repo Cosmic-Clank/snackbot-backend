@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from models import OrderRequest, OrderStatus
 from queue_manager import add_order, get_order_status, get_orders
 from dispatcher import process_orders
+from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 
 app = FastAPI()
@@ -15,6 +16,14 @@ async def lifespan(app: FastAPI):
     task.cancel()
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Adjust to your frontend's origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all methods (GET, POST, OPTIONS, etc.)
+    allow_headers=["*"],  # Allow all headers (Content-Type, etc.)
+)
 
 
 @app.post("/order")
