@@ -3,6 +3,7 @@ import uuid
 
 order_queue = queue.Queue()
 order_status = {}
+current_order = None
 
 
 def add_order(order_data):
@@ -20,9 +21,16 @@ def add_order(order_data):
 
 
 def get_next_order():
+    global current_order
     if not order_queue.empty():
-        return order_queue.get()
+        current_order = order_queue.get()
+        return current_order
+    current_order = None
     return None
+
+
+def get_current_order():
+    return current_order
 
 
 def update_order_status(order_id, status):

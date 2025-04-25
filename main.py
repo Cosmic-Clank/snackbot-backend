@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from models import OrderRequest, OrderStatus
-from queue_manager import add_order, get_order_status, get_orders
+from queue_manager import add_order, get_order_status, get_orders, get_current_order
 from dispatcher import process_orders
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
@@ -41,7 +41,8 @@ async def check_status(order_id: str):
 @app.get("/orders")
 async def get_all_orders():
     orders = get_orders()
-    return {"orders": orders}
+    current = get_current_order()
+    return {"current_order": current, "queued_orders": orders}
 
 
 @app.get("/")
